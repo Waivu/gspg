@@ -80,7 +80,7 @@ class gererFormateursController extends Controller
                 ->with('mail', $mail)
                 ->with('tel', $tel)
                 ->with('id', $id);
-            if (strlen($tel) != 10) {
+            if (!preg_match("#^(\+33|0)[1679][0-9]{8}$#", $tel)) {
                 $erreurs[] = "Numero de téléphone du formateur invalide";
                 $ok = 0;
             }
@@ -119,12 +119,11 @@ class gererFormateursController extends Controller
         } else {
             return view('connexion')->with('erreurs', null);
         }
-
-
-        #-------------------------------------------- :D --------------------------------------------#
-        #-------------------------------------------- :D --------------------------------------------#
-        #-------------------------------------------- :D --------------------------------------------#
     }
+
+        #-------------------------------------------- :D --------------------------------------------#
+        #-------------------------------------------- :D --------------------------------------------#
+        #-------------------------------------------- :D --------------------------------------------#
     function enregAjoutFormateurs(Request $request)
     {
         if (session('gestionnaire') != null) {
@@ -143,7 +142,7 @@ class gererFormateursController extends Controller
                 ->with('prenom', $prenom)
                 ->with('mail', $mail)
                 ->with('tel', $tel);
-            if (strlen($tel) != 10) {
+            if (!preg_match("#^(\+33|0)[1679][0-9]{8}$#", $tel)){
                 $erreurs[] =  "numéro de téléphone invalide";
                 $ok = 0;
             }

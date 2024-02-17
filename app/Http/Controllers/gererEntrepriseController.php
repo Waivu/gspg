@@ -5,51 +5,49 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Facades\PdoGspg;
 
-class gererStagiairesController extends Controller
+class gererEntrepriseController extends Controller
 {
-
-
-    function afficherStagiaire()
+    function afficherEntreprise()
     {
         if (session('gestionnaire') != null) {
-
-            $stagiaires = PdoGspg::getStagiaires();
-            $view = view('afficherStagiaires')
+            $entreprise = PdoGspg::getEntreprise();
+            $view = view('afficherEntreprise')
                 ->with('gestionnaire', session('gestionnaire'))
                 ->with('lstStage', session('lstStage'))
                 ->with('lstOption', session('lstOption'))
-                ->with('stagiaires', $stagiaires);
+                ->with('entreprise', $entreprise);
             return $view;
         } else {
             return view('connexion')->with('erreurs', null);
-        }
+        } 
+
     }
 
-    function modifierStagiaire(Request $request)
+    function modifierEntreprise(Request $request)
     {
         if (session('gestionnaire') != null) {
             $id = $request['id'];
-            $stagiaire = PdoGspg::getStagiaireById($id);
-            $nom = $stagiaire['nom'];
-            $prenom = $stagiaire['prenom'];
-            $adresse = $stagiaire['adresse'];
-            $mail = $stagiaire['mail'];
-            $tel = $stagiaire['tel'];
-            $promotion = $stagiaire['promotion'];
-            $choixOption = $stagiaire['choixOption'];
+            $entreprise = PdoGspg::getEntrepriseById($id);
+            $nom = $entreprise['nom'];
+            $adresse = $entreprise['adresse'];
+            $ville = $entreprise['ville'];
+            $mail = $entreprise['mail'];
+            $tel = $entreprise['tel'];
+            $nomTuteurStage = $entreprise['nomTuteurStage'];
+            $telTuteurStage = $entreprise['telTuteurStage'];
             $message = "";
             $erreurs[] = "";
-            $view = view('modifierStagiaire')
+            $view = view('modifierEntreprise')
                 ->with('gestionnaire', session('gestionnaire'))
                 ->with('lstStage', session('lstStage'))
                 ->with('lstOption', session('lstOption'))
                 ->with('nom', $nom)
-                ->with('prenom', $prenom)
                 ->with('adresse', $adresse)
+                ->with('ville', $ville)
                 ->with('mail', $mail)
                 ->with('tel', $tel)
-                ->with('promotion', $promotion)
-                ->with('choixOption', $choixOption)
+                ->with('nomTuteurStage', $nomTuteurStage)
+                ->with('telTuteurStage', $telTuteurStage)
                 ->with('id', $id)
                 ->with('erreurs', null)
                 ->with('message', null);
@@ -57,54 +55,51 @@ class gererStagiairesController extends Controller
         } else {
             return view('connexion')->with('erreurs', null);
         }
-
     }
 
-    function enregModifStagiaire(Request $request)
+    function enregModifEntreprise(Request $request)
     {
         if (session('gestionnaire') != null) {
 
             $nom = $request['nom'];
-            $prenom = $request['prenom'];
             $adresse = $request['adresse'];
+            $ville = $request['ville'];
             $mail = $request['mail'];
             $tel = $request['tel'];
-            $promotion = $request['promotion'];
-            if (isset($request['SLAM']))
-                $choixOption = 'SLAM';
-            else
-                $choixOption = 'SISR'; 
+            $nomTuteurStage = $request['nomTuteurStage'];
+            $telTuteurStage = $request['telTuteurStage'];
             $id = $request['id'];
             $ok = 1;
             $message = "";
-            $view = view('modifierStagiaire')
+            $view = view('modifierEntreprise')
                 ->with('gestionnaire', session('gestionnaire'))
                 ->with('lstStage', session('lstStage'))
                 ->with('lstOption', session('lstOption'))
                 ->with('nom', $nom)
-                ->with('prenom', $prenom)
                 ->with('adresse', $adresse)
+                ->with('ville', $ville)
                 ->with('mail', $mail)
                 ->with('tel', $tel)
-                ->with('promotion', $promotion)
-                ->with('choixOption', $choixOption)
+                ->with('nomTuteurStage', $nomTuteurStage)
+                ->with('telTuteurStage', $telTuteurStage)
                 ->with('id', $id);
             if (!preg_match("#^(\+33|0)[1679][0-9]{8}$#", $tel)) {
-                $erreurs[] = "Numero de téléphone du stagiaire invalide";
+                $erreurs[] = "Numero de téléphone de l'entreprise invalide";
                 $ok = 0;
             }
             if (!preg_match('/[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+.[a-zA-Z]{2,4}/i', $mail)) {
                 $erreurs[] =  "le mail n'est pas valide";
                 $ok = 0;
-            if (!preg_match("/[0-9]{2}\/[0-9]{2}\/[0-9]{4}/", $promotion)){
-                $erreurs[] =  "la promotion n'est pas valide";
+
+            if (!preg_match("#^(\+33|0)[1679][0-9]{8}$#", $telTuteurStage)) {
+                $erreurs[] = "Numero de téléphone du tuteur invalide";
                 $ok = 0;
             }
                 
             }
             if ($ok == 1) {
-                PdoGspg::majStagiaire($id, $nom, $prenom, $mail, $tel, $adresse, $promotion, $choixOption);
-                $message = "Votre stagiaire a été mise à jour";
+                PdoGspg::majEntreprise($id, $nom, $mail, $tel, $adresse, $ville, $nomTuteurStage, $telTuteurStage);
+                $message = "l'entreprise a été mise à jour";
                 $erreurs = null;
             }
             return $view->with('erreurs', $erreurs)
@@ -113,13 +108,13 @@ class gererStagiairesController extends Controller
             return view('connexion')->with('erreurs', null);
         }
     }
-
-    function ajouterStagiaire()
+    
+    function ajouterEntreprise()
     {
         if (session('gestionnaire') != null) {
             $message = "";
             $erreurs[] = "";
-            $view = view('ajouterStagiaire')
+            $view = view('ajouterEntreprise')
                 ->with('gestionnaire', session('gestionnaire'))
                 ->with('lstStage', session('lstStage'))
                 ->with('lstOption', session('lstOption'))
@@ -131,50 +126,51 @@ class gererStagiairesController extends Controller
             return view('connexion')->with('erreurs', null);
         }
     }
-
-    function enregAjoutStagiaire(Request $request)
+    function enregAjoutEntreprise(Request $request)
     {
         if (session('gestionnaire') != null) {
 
             $nom = $request['nom'];
-            $prenom = $request['prenom'];
             $adresse = $request['adresse'];
+            $ville = $request['ville'];
             $mail = $request['mail'];
             $tel = $request['tel'];
-            $promotion = $request['promotion'];
-            if (isset($request['SLAM']))
-                $choixOption = 'SLAM';
-            else
-                $choixOption = 'SISR'; 
-           
-            $message = "";
+            $nomTuteurStage = $request['nomTuteurStage'];
+            $telTuteurStage = $request['telTuteurStage'];
+            $id = $request['id'];
             $ok = 1;
-            $view = view('ajouterStagiaire')
+            $message = "";
+            $view = view('ajouterEntreprise')
                 ->with('gestionnaire', session('gestionnaire'))
                 ->with('lstStage', session('lstStage'))
                 ->with('lstOption', session('lstOption'))
                 ->with('nom', $nom)
-                ->with('prenom', $prenom)
                 ->with('adresse', $adresse)
+                ->with('ville', $ville)
                 ->with('mail', $mail)
                 ->with('tel', $tel)
-                ->with('promotion', $promotion)
-                ->with('choixOptiion', $choixOption);
+                ->with('nomTuteurStage', $nomTuteurStage)
+                ->with('telTuteurStage', $telTuteurStage)
+                ->with('id', $id);
             if (!preg_match("#^(\+33|0)[1679][0-9]{8}$#", $tel)) {
-                $erreurs[] =  "numéro de téléphone invalide";
+                $erreurs[] = "Numero de téléphone de l'entreprise invalide";
                 $ok = 0;
+            }
             if (!preg_match('/[-0-9a-zA-Z.+_]+@[-0-9a-zA-Z.+_]+.[a-zA-Z]{2,4}/i', $mail)) {
                 $erreurs[] =  "le mail n'est pas valide";
                 $ok = 0;
+
+            if (!preg_match("#^(\+33|0)[1679][0-9]{8}$#", $telTuteurStage)) {
+                $erreurs[] = "Numero de téléphone du tuteur invalide";
+                $ok = 0;
             }
-                    
+                
             }
             if ($ok == 1) {
-                PdoGspg::ajouterStagiaire($nom, $prenom, $adresse, $mail, $tel, $promotion, $choixOption);
-                $message = "Votre stagiaire a été ajouté";
+                PdoGspg::ajouterEntreprise($id, $nom, $adresse, $ville, $mail, $tel, $nomTuteurStage, $telTuteurStage);
+                $message = "l'entreprise a été ajouter";
                 $erreurs = null;
             }
-            var_dump($erreurs);
             return $view->with('erreurs', $erreurs)
                 ->with('message', $message);
         } else {
@@ -182,4 +178,5 @@ class gererStagiairesController extends Controller
         }
     }
 
+    
 }
