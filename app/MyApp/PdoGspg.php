@@ -72,6 +72,7 @@ class PdoGspg
 	public function ajouterFormateurs($nom, $prenom, $mail, $tel)
 	{
 		$req = "insert into formateur (nom,prenom,mail,tel) VALUES('$nom', '$prenom', '$mail', '$tel')";
+		dd($req);
 		$rs = $this->monPdo->query($req);
 		return $rs;
 	}
@@ -94,6 +95,7 @@ class PdoGspg
 
 	// Cas STAGIAIRES -----------------------------------------------------------------
 
+	#public function getStagiaires($promotion, $option)
 	public function getStagiaires()
 	{
 		$req = "select * from stagiaire";
@@ -101,6 +103,114 @@ class PdoGspg
 		$lignes = $rs->fetchAll();
 		return $lignes;
 	}
+	public function ajouterStagiaire($nom, $prenom, $adresse, $mail, $tel, $promotion, $choixOption)
+	{
+		$req = "insert into stagiaire (nom,prenom,adresse,mail,tel,promotion,choixOption) 
+		VALUES('$nom', '$prenom', '$adresse' ,'$mail', '$tel', '$promotion', '$choixOption')";
+		
+		$rs = $this->monPdo->exec($req);
+		return $rs;
+	}
+	public function getStagiaireById($id)
+	{
+		$req = "select * from stagiaire WHERE id ='" . $id . "'";
+		$rs = $this->monPdo->query($req);
+		$ligne = $rs->fetch();
+		return $ligne;
+	}
+	public function majStagiaire($id, $nom, $prenom, $mail, $tel, $adresse, $promotion, $choixOption)
+	{
+		$req = "update stagiaire 
+		set nom = '$nom', prenom = '$prenom', mail = '$mail', tel = '$tel', adresse = '$adresse', promotion = '$promotion', choixOption = '$choixOption' ";
+		$req .= "where id = '$id'";
+		$rs = $this->monPdo->exec($req);
+		return $rs;
+	}
+
+	// Cas ENTREPRISE -----------------------------------------------------------------
+
+	#public function getEntreprise($promotion, $option)
+
+	public function getEntreprise()
+	{
+		$req = "select * from entreprise";
+		$rs = $this->monPdo->query($req);
+		$lignes = $rs->fetchAll();
+		return $lignes;
+
+	}
+
+	public function ajouterEntreprise($nom, $adresse, $ville, $mail, $tel, $nomTuteurStage, $telTuteurStage)
+	{
+		$req = "insert into entreprise (nom, adresse, ville, mail, tel, nomTuteurStage, telTuteurStage) 
+		VALUES('$nom', '$adresse', '$ville', '$mail', '$tel', '$nomTuteurStage', '$telTuteurStage')";
+		//dd($req);
+		$rs = $this->monPdo->query($req);
+		return $rs;
+
+	}
+
+	public function getEntrepriseById($id)
+	{
+		$req = "select * from entreprise WHERE id ='" . $id . "'";
+		$rs = $this->monPdo->query($req);
+		$ligne = $rs->fetch();
+		return $ligne;
+	}
+
+	public function majEntreprise($id,$nom, $adresse, $ville, $mail, $tel, $nomTuteurStage, $telTuteurStage)
+	{
+		$req = "update entreprise 
+		set nom = '$nom', adresse = '$adresse', ville = '$ville', mail = '$mail', tel = '$tel', nomTuteurStage = '$nomTuteurStage', telTuteurStage = '$telTuteurStage'";
+		$req .= "where id = '$id'";
+		//dd($req);
+		$rs = $this->monPdo->query($req);
+		return $rs;
+	}
+
+	// Cas STAGE -----------------------------------------------------------------
+
+	#public function getStage($promotion, $option)
+
+	public function getStage()
+	{
+		$req = "select * from stage";
+		$rs = $this->monPdo->query($req);
+		$lignes = $rs->fetchAll();
+		return $lignes;
+
+	}
+
+	public function ajouterStage($libelle, $dateDebut, $dateFin, $promotion, $numero)
+	{
+		$req = "insert into stage (libelle, dateDebut, dateFin, promotion, numero) 
+		VALUES('$libelle', '$dateDebut', '$dateFin', '$promotion', '$numero')";
+		//dd($req);
+		$rs = $this->monPdo->query($req);
+		return $rs;
+
+	}
+
+	public function getStageById($id)
+	{
+		$req = "select * from stage WHERE id ='" . $id . "'";
+		$rs = $this->monPdo->query($req);
+		$ligne = $rs->fetch();
+		return $ligne;
+	}
+
+	public function majStage($id, $dateDebut, $dateFin)
+	{
+		$req = "update stage set  dateDebut = '$dateDebut', dateFin = '$dateFin' ";
+		$req .= " where id = $id ";
+		//dd($req);
+		$rs = $this->monPdo->query($req);
+		return $rs;
+	}
+
+
+
+
 }
 
 	

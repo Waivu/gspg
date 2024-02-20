@@ -18,14 +18,20 @@
                      <a href="{{ route('chemin_choixstage')}}" title="Choisir le stage">Choisir le stage</a>
                   </li>
                    <li class="smenu">
-                    <a href="{{ route('chemin_afficherStagiaire')}}" title="Afficher les stagiaires">
-                      Gérer les stagiaires</a>
+                    <a href="{{ route('chemin_afficherStagiaire')}}" title="Afficher les stagiaires">Gérer les stagiaires</a>
+                      
                   </li>
                    <li class="smenu">
                     <a href="{{ route('chemin_afficherFormateurs')}}" title="Afficher les formateurs">Gérer les formateurs</a>
                   </li>
                   <li class="smenu">
-                <a href="{{ route('chemin_deconnexion') }}"" title="Se déconnecter">Déconnexion</a>
+                    <a href="{{ route('chemin_afficherEntreprise')}}" title="Afficher les entreprises">Gérer les entreprises</a>
+                  </li>
+                  <li class="smenu">
+                    <a href="{{ route('chemin_afficherStage')}}" title="Afficher les stages">Gérer les stages</a>
+                  </li>
+                  <li class="smenu">
+                <a href="{{ route('chemin_deconnexion') }}" title="Se déconnecter">Déconnexion</a>
                   </li>
                 </ul>
                

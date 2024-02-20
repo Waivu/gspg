@@ -25,13 +25,14 @@
                     <td> {{ $stagiaire['tel'] }}</td>
                     <td> {{ $stagiaire['promotion'] }}</td>
                     <td> {{ $stagiaire['choixOption'] }}</td>
+                    <td><a href="{{ route('chemin_modifierStagiaire',['id'=>$stagiaire['id']]) }}">Modifier</a></td>
             
                 </tr>
             @endforeach
 
         </Table>
         <br>
-        <center>
+        <center><a href="{{ route('chemin_ajouterStagiaire') }}" title="Ajouter un stagiaire">Ajouter un stagiaire</a></center>
       
     </div>
 @endsection

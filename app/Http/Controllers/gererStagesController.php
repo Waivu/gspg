@@ -68,9 +68,11 @@ class gererStagesController extends Controller
         if (session('gestionnaire') != null) {
             $id = $request['id'];
             $stage = PdoGspg::getStageById($id);
-            
+            $libelle = $stage['libelle'];
             $dateDebut = $stage['dateDebut'];
             $dateFin = $stage['dateFin'];
+            $promotion = $stage['promotion'];
+            $numero = $stage['numero'];
          
             $message = "";
             $erreurs[] = "";
@@ -78,10 +80,11 @@ class gererStagesController extends Controller
                 ->with('gestionnaire', session('gestionnaire'))
                 ->with('lstStage', session('lstStage'))
                 ->with('lstOption', session('lstOption'))
-               
+                ->with('libelle', $libelle)
                 ->with('dateDebut', $dateDebut)
                 ->with('dateFin', $dateFin)
-                
+                ->with('promotion', $promotion)
+                ->with('numero', $numero)
                 ->with('id', $id)
                 ->with('erreurs', null)
                 ->with('message', null);
@@ -99,10 +102,11 @@ class gererStagesController extends Controller
     {
         if (session('gestionnaire') != null) {
 
-      
+            $libelle = $request['libelle'];
             $dateDebut = $request['dateDebut'];
             $dateFin = $request['dateFin'];
-         
+            $promotion = $request['promotion'];
+            $numero = $request['numero'];
             $id = $request['id'];
             $ok = 1;
             $message = "";
@@ -110,16 +114,17 @@ class gererStagesController extends Controller
                 ->with('gestionnaire', session('gestionnaire'))
                 ->with('lstStage', session('lstStage'))
                 ->with('lstOption', session('lstOption'))
-               
+                ->with('libelle', $promotion . $numero)
                 ->with('dateDebut', $dateDebut)
                 ->with('dateFin', $dateFin)
-               
+                ->with('promotion', $promotion)
+                ->with('numero', $numero)
                 ->with('id', $id);
-            if (!preg_match("/([0-9]{4})-([0-9]{2})-([0-9]{2})/", $dateDebut)) {
+            if (!preg_match('/20[0-9]{2}-[0-1]{1}[0-2]{1}-[0-31]{1}/', $dateDebut)&& substr($dateDebut,0,4)==substr($libelle,0,4)) {
                 $erreurs[] = "la date est invalide";
                 $ok = 0;
             }
-            if (!preg_match("/([0-9]{4})-([0-9]{2})-([0-9]{2})/", $dateFin)) {
+            if (!preg_match('/20[0-9]{2}-[0-1]{1}[0-2]{1}-[0-31]{1}/', $dateFin)&& substr($dateFin,0,4)==substr($libelle,0,4)) {
                 $erreurs[] =  "la date est invalide";
                 $ok = 0;
             }
@@ -163,12 +168,14 @@ class gererStagesController extends Controller
     {
         if (session('gestionnaire') != null) {
 
-            $libelle = $request['libelle'];
+            
+           
             $dateDebut = $request['dateDebut'];
             $dateFin = $request['dateFin'];
             $promotion = $request['promotion'];
             $numero = $request['numero'];
             $message = "";
+            $libelle = $promotion . "_" . $numero;
             $ok = 1;
             $view = view('ajouterStage')
                 ->with('gestionnaire', session('gestionnaire'))
@@ -179,11 +186,11 @@ class gererStagesController extends Controller
                 ->with('dateFin', $dateFin)
                 ->with('promotion', $promotion)
                 ->with('numero', $numero);
-            if (!preg_match("/([0-9]{4})-([0-9]{2})-([0-9]{2})/", $dateDebut)) {
+            if (!preg_match('/20[0-9]{2}-[0-1]{1}[0-2]{1}-[0-31]{1}/', $dateDebut)&& substr($dateDebut,0,4)==$promotion) {
                 $erreurs[] =  "la date est invalide";
                 $ok = 0;
             }
-            if (!preg_match("/([0-9]{4})-([0-9]{2})-([0-9]{2})/", $dateFin)) {
+            if (!preg_match('/20[0-9]{2}-[0-1]{1}[0-2]{1}-[0-31]{1}/', $dateFin)&& substr($dateFin,0,4)==$promotion) {
                 $erreurs[] =  "la date est invalide";
                 $ok = 0;
             }   
